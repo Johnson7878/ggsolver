@@ -1,0 +1,38 @@
+start: prefltl_formula
+
+?prefltl_formula:           pref_formula
+
+?pref_formula:              pref_or
+?pref_or:                   pref_and (PREF_OR pref_and)*
+?pref_and:                  pref_base (PREF_AND pref_base)*
+
+?pref_base:                 prefltl_strictpref
+            |               prefltl_weakpref
+            |               prefltl_indifference
+            |               prefltl_incomparable
+            |               prefltl_wrapped
+            |               ltl_formula
+
+
+?prefltl_wrapped:           LSEPARATOR pref_formula RSEPARATOR
+?prefltl_strictpref:        ltl_formula STRICTPREF ltl_formula
+?prefltl_weakpref:          ltl_formula WEAKPREF ltl_formula
+?prefltl_indifference:      ltl_formula INDIFFERENCE ltl_formula
+?prefltl_incomparable:      ltl_formula INCOMPARABLE ltl_formula
+
+
+// LTL formula will accept any arbitrary string. We will invoke spot's parser to process LTL, PL formulas.
+ltl_formula:                STRING
+
+
+STRING:                     /[A-Za-z()_!|&\s+]+/
+LSEPARATOR:                 "("
+RSEPARATOR:                 ")"
+STRICTPREF:                 ">"
+WEAKPREF:                   ">="
+INDIFFERENCE:               "~"
+INCOMPARABLE:               "<>"
+PREF_AND:                   "&&"
+PREF_OR:                    "||"
+
+%ignore /\s+/
